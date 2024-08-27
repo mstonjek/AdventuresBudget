@@ -24,7 +24,8 @@
         "nettrine/cache": "^0.3.0",
         "league/oauth2-github": "^3.1",
         "symfony/serializer": "^6.4",
-        "symfony/property-access": "^6.4"
+        "symfony/property-access": "^6.4",
+        "phpoffice/phpspreadsheet": "^2.2"
 
     },
     "config": {
