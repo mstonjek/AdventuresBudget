@@ -3,7 +3,7 @@ parameters:
 application:
 	errorPresenter: Error
 	mapping:
-		*: App\*Module\Presenters\*Presenter
+		*: App\Presenters\*Presenter
 
 extensions:
    console: Contributte\Console\DI\ConsoleExtension(%consoleMode%)

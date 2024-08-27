@@ -15,10 +15,8 @@ final class RouterFactory
     {
         $router = new RouteList();
 
-        $router->withModule('App')->addRoute('<presenter>[/<action=default>][/<id>]', [
-            'presenter' => 'Homepage',
-        ]);
-        $router->addRoute('<presenter>[/<action=default>]');
+
+        $router->addRoute('<presenter>/<action>[/<id>]', 'Dashboard:default');
 
         return $router;
     }
