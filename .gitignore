@@ -1,0 +1,4 @@
+docker
+vendor/*
+config/local.neon
+.DS_Store
