@@ -1,9 +1,17 @@
 {block content}
 
     {foreach $adventures as $adventure}
-
+        {$adventure->serialNumber}
+        {$adventure->orderNumber}
         {$adventure->adventureName}
+        {$adventure->providerName}
+        {$adventure->coordinatorName}
+        {$adventure->participantsCount}
+        {$adventure->estimatedCost}
 
+        <a n:href="Adventure:edit $adventure->adventureId">Upravit akci</a>
     {/foreach}
 
+    <a n:href="Adventure:add">Přidat akci</a>
+    <a n:href="Adventure:addExcel">Přidat akci (excel)</a>
 {/block}

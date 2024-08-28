@@ -1,0 +1,79 @@
+{block content}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="mb-3">
+                    <a href="#" class="btn btn-sm btn-primary">Adventure Details</a>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Adventure Information</h3>
+                    </div>
+                    <form n:name="adventureAddForm">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label for="frm-adventureEditForm-orderNumber">Order Number*</label>
+                                            <input n:name="orderNumber" class="form-control" placeholder="Order Number">
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col-md-12">
+                                            <label for="frm-adventureEditForm-adventureName">Adventure Name*</label>
+                                            <input n:name="adventureName" class="form-control" placeholder="Adventure Name">
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col-md-12">
+                                            <label for="frm-adventureEditForm-date">Date*</label>
+                                            <input n:name="adventureDate" type="datetime-local" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col-md-12">
+                                            <label for="frm-adventureEditForm-department">Department*</label>
+                                            <select n:name="department" class="form-control"></select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="row mt-2">
+                                        <div class="col-md-12">
+                                            <label for="frm-adventureEditForm-providerName">Provider Name*</label>
+                                            <input n:name="providerName" class="form-control" placeholder="Provider Name">
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col-md-12">
+                                            <label for="frm-adventureEditForm-coordinatorName">Coordinator Name*</label>
+                                            <input n:name="coordinatorName" class="form-control" placeholder="Coordinator Name">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="row mt-2">
+                                        <div class="col-md-12">
+                                            <label for="frm-adventureEditForm-estimatedCost">Estimated Cost*</label>
+                                            <input n:name="estimatedCost" class="form-control" type="number" placeholder="Estimated Cost">
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col-md-12">
+                                            <label for="frm-adventureEditForm-actualCost">Actual Cost</label>
+                                            <input n:name="actualCost" class="form-control" type="number" placeholder="Actual Cost">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{/block}

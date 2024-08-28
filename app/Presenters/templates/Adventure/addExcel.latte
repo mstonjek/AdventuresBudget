@@ -1,0 +1,16 @@
+{block content}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <h3>Upload Adventures from Excel</h3>
+                <form n:name="adventureExcelForm" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="frm-adventureExcelForm-excelFile">Excel File</label>
+                        <input n:name="excelFile" type="file" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-3">Upload</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{/block}

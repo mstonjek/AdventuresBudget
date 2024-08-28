@@ -8,11 +8,11 @@ use App\Model\Entity\Adventure;
 use App\Repository\AdventureRepository;
 use App\Model\Entity\DepartmentEnum;
 use Nette\Application\UI\Form;
-use Nette\SmartObject;
+use Nette;
 
 final class AdventureFormFactory
 {
-    use SmartObject;
+    use Nette\SmartObject;
 
     const REQUIRED_MESSAGE = "Nebyla vyplněna všechny povinná pole!";
 
@@ -23,9 +23,8 @@ final class AdventureFormFactory
 
     }
 
-    public function create(callable $onSuccess, Adventure $adventure): Form
+    public function create(callable $onSuccess, ?Adventure $adventure = null): Form
     {
-
         $form = $this->factory->create();
 
         $form->addText('orderNumber')
@@ -36,8 +35,8 @@ final class AdventureFormFactory
             ->setDefaultValue($adventure->name ?? null)
             ->setRequired(self::REQUIRED_MESSAGE);
 
-        $form->addDateTime('date')
-            ->setDefaultValue($adventure->date ?? null)
+        $form->addText('adventureDate')
+            ->setDefaultValue($adventure->adventureDate->toString() ?? null)
             ->setRequired(self::REQUIRED_MESSAGE);
 
         $items = [];
@@ -69,19 +68,24 @@ final class AdventureFormFactory
         $form->addSubmit('submit')
             ->setDefaultValue('Uložit');
 
-        $form->onSuccess[] = function (Form $form, \stdClass $values) use ($onSuccess): void {
+        $form->onSuccess[] = function (Form $form, \stdClass $values) use ($onSuccess, $adventure): void {
+            $adventureCount = $this->adventureRepository->getCount();
+
             if ($adventure === null) {
                 $adventure = new Adventure();
             }
 
+            $adventure->serialNumber = $adventureCount + 1;
             $adventure->orderNumber = $values->orderNumber;
             $adventure->adventureName = $values->adventureName;
             $adventure->providerName = $values->providerName;
             $adventure->coordinatorName = $values->coordinatorName;
-            $adventure->estimatedCost = $values->estimatedCost;
-            $adventure->actualCost = $values->actualCost;
-            $adventure->department = $values->department;
-            $adventure->date = $values->date;
+            $adventure->estimatedCost = (float)$values->estimatedCost;
+            $adventure->actualCost = (float)$values->actualCost;
+            $adventure->department = DepartmentEnum::from($values->department);
+            $adventure->adventureDate = new \DateTime($values->adventureDate);
+            $adventure->participantsCount = 123;
+
 
             $adventure = $this->adventureRepository->update($adventure);
             $onSuccess($adventure);

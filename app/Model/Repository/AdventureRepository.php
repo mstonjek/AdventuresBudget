@@ -16,5 +16,10 @@ class AdventureRepository extends BaseRepository
         return $this->getRepository()->findAll();
     }
 
+    public function getCount(): int
+    {
+        return $this->getRepository()->count([]);
+    }
+
 
 }

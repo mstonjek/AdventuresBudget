@@ -48,11 +48,13 @@ final class AdventureExcelFormFactory
         $data = $worksheet->toArray();
 
         $header = array_shift($data);
+        $adventureCount = $this->adventureRepository->getCount();
         $iterator = 0;
         $adventures = [];
 
         foreach ($data as $row) {
             $adventure = new Adventure();
+            $adventure->serialNumber = $adventureCount++;
             $adventure->orderNumber = $row[0];
             $adventure->adventureName = $row[1];
             $adventure->date = new \DateTime($row[2]);
