@@ -17,7 +17,7 @@ final class AdventureFormFactory
     const REQUIRED_MESSAGE = "Nebyla vyplněna všechny povinná pole!";
 
     public function __construct(
-        private readonly FormFactory         $factory,
+        private readonly FormFactory $factory,
         private readonly AdventureRepository $adventureRepository,
     ){
 
@@ -32,11 +32,11 @@ final class AdventureFormFactory
             ->setRequired(self::REQUIRED_MESSAGE);
 
         $form->addText('adventureName')
-            ->setDefaultValue($adventure->name ?? null)
+            ->setDefaultValue($adventure->adventureName ?? null)
             ->setRequired(self::REQUIRED_MESSAGE);
 
-        $form->addText('adventureDate')
-            ->setDefaultValue($adventure->adventureDate->toString() ?? null)
+        $form->addInteger('participantsCount')
+            ->setDefaultValue($adventure->participantsCount ?? null)
             ->setRequired(self::REQUIRED_MESSAGE);
 
         $items = [];
@@ -44,8 +44,8 @@ final class AdventureFormFactory
             $items[$department->value] = $department->value;
         }
         $form->addSelect('department')
-            ->setDefaultValue($adventure->department ?? null)
             ->setItems($items)
+            ->setDefaultValue($adventure->department->value ?? null)
             ->setRequired(self::REQUIRED_MESSAGE);
 
         $form->addText('providerName')
@@ -73,9 +73,9 @@ final class AdventureFormFactory
 
             if ($adventure === null) {
                 $adventure = new Adventure();
+                $adventure->serialNumber = $adventureCount + 1;
             }
 
-            $adventure->serialNumber = $adventureCount + 1;
             $adventure->orderNumber = $values->orderNumber;
             $adventure->adventureName = $values->adventureName;
             $adventure->providerName = $values->providerName;
@@ -83,14 +83,14 @@ final class AdventureFormFactory
             $adventure->estimatedCost = (float)$values->estimatedCost;
             $adventure->actualCost = (float)$values->actualCost;
             $adventure->department = DepartmentEnum::from($values->department);
-            $adventure->adventureDate = new \DateTime($values->adventureDate);
-            $adventure->participantsCount = 123;
-
+            $adventure->adventureDate = new \DateTime();
+            $adventure->participantsCount = $values->participantsCount;
 
             $adventure = $this->adventureRepository->update($adventure);
-            $onSuccess($adventure);
 
+            $onSuccess($adventure);
         };
+
 
         return $form;
 

@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\Forms;
 
 use App\Repository\AdventureRepository;
+use App\Model\Entity\Adventure;
 use Nette\Application\UI\Form;
 use Nette\Http\FileUpload;
 use Nette\SmartObject;
+use App\Model\Entity\DepartmentEnum;
 use Nette\Utils\ArrayHash;
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -28,7 +30,10 @@ final class AdventureExcelFormFactory
 
         $form->addUpload('excelFile', 'Upload Excel File')
             ->setRequired('Please upload an Excel file')
-            ->addRule(Form::UPLOAD, 'The file must be an Excel file.', ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel']);
+            ->addRule(Form::MIME_TYPE, 'The file must be an Excel file.', [
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                'application/vnd.ms-excel'
+            ]);
 
         $form->addSubmit('submit', 'Upload')
             ->setDefaultValue('Uložit');
@@ -39,34 +44,44 @@ final class AdventureExcelFormFactory
                     $onSuccess($adventures);
                 }
         };
+
+        return $form;
     }
 
     private function processExcelFile($file): array
     {
-        $spreadsheet = IOFactory::load($file);
+        $tempFilePath = __DIR__ . "/www/tempFiles" . $file->getName();
+        $file->move($tempFilePath);
+
+        $spreadsheet = IOFactory::load($tempFilePath);
         $worksheet = $spreadsheet->getActiveSheet();
         $data = $worksheet->toArray();
 
         $header = array_shift($data);
         $adventureCount = $this->adventureRepository->getCount();
-        $iterator = 0;
         $adventures = [];
 
         foreach ($data as $row) {
+            $adventureCount++;
+
             $adventure = new Adventure();
-            $adventure->serialNumber = $adventureCount++;
+            $adventure->serialNumber = $adventureCount;
             $adventure->orderNumber = $row[0];
             $adventure->adventureName = $row[1];
-            $adventure->date = new \DateTime($row[2]);
-            $adventure->department = DepartmentEnum::from($row[3]);
-            $adventure->providerName = $row[4];
-            $adventure->coordinatorName = $row[5];
-            $adventure->estimatedCost = (float)$row[6];
-            $adventure->actualCost = $row[7] !== null ? (float)$row[7] : null;
+            $adventure->adventureDate = new \DateTime($row[2]);
+            $adventure->participantsCount = (int)$row[3];
+            $adventure->department = DepartmentEnum::from($row[4]);
+            $adventure->providerName = $row[5];
+            $adventure->coordinatorName = $row[6];
+            $adventure->estimatedCost = (float) $row[7];
+            $adventure->actualCost = isset($row[8]) ? (float) $row[8] : null;
+
 
             $this->adventureRepository->update($adventure);
-            $adventures[$iterator++] = $adventure;
+            $adventures[] = $adventure;
         }
+
+        unlink($tempFilePath);
         return $adventures;
     }
 
