@@ -5,6 +5,7 @@ namespace App\Model\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use App\Model\Entity\DepartmentEnum;
+use App\Model\Entity\Budget;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'adventure')]
@@ -15,6 +16,10 @@ class Adventure
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
     public string $adventureId;
+
+    #[ORM\ManyToOne(targetEntity: Budget::class, inversedBy: 'budget_id')]
+    #[ORM\JoinColumn(name: 'budget_id', referencedColumnName: 'budget_id')]
+    public Budget $budget;
 
     #[ORM\Column(name: 'serial_number', type: 'integer', unique: true)]
     public int $serialNumber;
@@ -44,6 +49,14 @@ class Adventure
 
     #[ORM\Column(name: 'actual_cost', type: 'float', nullable: true)]
     public ?float $actualCost;
+
+    #[ORM\Column(name: 'approved', type: 'boolean')]
+    public bool $approved = false;
+
+
+
+
+
 
 
 }
