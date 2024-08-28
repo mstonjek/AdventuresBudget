@@ -17,6 +17,9 @@
         </thead>
         <tbody>
         {foreach $adventures as $adventure}
+
+            {skipIf $adventure->approved === false}
+
             <tr>
                 <td>{$adventure->serialNumber}</td>
                 <td>{$adventure->orderNumber}</td>
@@ -25,6 +28,17 @@
                 <td>{$adventure->coordinatorName}</td>
                 <td>{$adventure->participantsCount}</td>
                 <td>{$adventure->estimatedCost}</td>
+                    {if $adventure->actualCost}
+                        <td>{$adventure->actualCost}</td>
+                    {else}
+                        <td>
+                            <form method="post" action="{link Adventure:updateActualCost}">
+                                <input type="hidden" name="adventureId" value="{$adventure->adventureId}">
+                                <input type="number" name="actualCost" placeholder="Enter cost" required>
+                                <button type="submit" class="btn btn-primary">Save</button>
+                            </form>
+                        </td>
+                    {/if}
                 <td>
                     {if isset($adventure->budget)}
                         {sprintf(
@@ -37,14 +51,16 @@
                         No budget assigned
                     {/if}
                 </td>
-
                 <td>
-                    <form>
-                        <button type="button" class="approval-button" data-adventure-id="{$adventure->adventureId}" data-approval-status="1">Approve</button>
-                        <button type="button" class="approval-button" data-adventure-id="{$adventure->adventureId}" data-approval-status="0">Disapprove</button>
-                    </form>
+                    {if !isset($adventure->approved)}
+                        <form>
+                            <button type="button" class="approval-button" data-adventure-id="{$adventure->adventureId}" data-approval-status="1">Approve</button>
+                            <button type="button" class="approval-button" data-adventure-id="{$adventure->adventureId}" data-approval-status="0">Disapprove</button>
+                        </form>
+                    {else}
+                        <p>Approved ✔️</p>
+                    {/if}
                 </td>
-
                 <td>
                     <a n:href="Adventure:edit $adventure->adventureId">Upravit akci</a>
                 </td>
@@ -69,28 +85,22 @@
         document.addEventListener('DOMContentLoaded', function () {
             document.querySelectorAll('.approval-button').forEach(function (button) {
                 button.addEventListener('click', function () {
-                    // Get adventureId and approvalStatus from data attributes
                     let adventureId = this.getAttribute('data-adventure-id');
                     let approvalStatus = this.getAttribute('data-approval-status');
 
-                    // Create new XMLHttpRequest
                     const xhttp = new XMLHttpRequest();
 
-                    // Prepare the URL with parameters
                     const url = {$basePath} + `/adventure/update-approval?adventureId=${ adventureId}&approvalStatus=${ approvalStatus}`;
 
-                    // Configure request
                     xhttp.open("POST", url, true);
                     xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
                     xhttp.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 
-                    // Define the callback function
                     xhttp.onload = function () {
                         if (xhttp.status >= 200 && xhttp.status < 300) {
                             let response = JSON.parse(xhttp.responseText);
                             if (response.success) {
                                 console.log('Approval status updated.');
-                                // Optionally, you can update the UI based on the response
                             } else {
                                 console.error('Failed to update approval status.');
                             }
@@ -99,12 +109,10 @@
                         }
                     };
 
-                    // Handle network errors
                     xhttp.onerror = function () {
                         console.error('Request failed.');
                     };
 
-                    // Send the request
                     xhttp.send();
                 });
             });

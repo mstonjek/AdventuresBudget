@@ -21,5 +21,9 @@ class AdventureRepository extends BaseRepository
         return $this->getRepository()->count([]);
     }
 
+    public function getDisapprovedAdventures(): array
+    {
+        return $this->getRepository()->findBy(["approved" => false]);
+    }
 
 }

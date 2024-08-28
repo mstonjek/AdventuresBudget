@@ -1,0 +1,51 @@
+{block content}
+
+    <table>
+        <thead>
+            <tr>
+                <th>Serial Number</th>
+                <th>Order Number</th>
+                <th>Adventure Name</th>
+                <th>Provider Name</th>
+                <th>Coordinator Name</th>
+                <th>Participants Count</th>
+                <th>Estimated Cost</th>
+                <th>Budget</th>
+                <th>Approved</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {foreach $disapprovedAdventures as $adventure}
+                    <tr>
+                        <td>{$adventure->serialNumber}</td>
+                        <td>{$adventure->orderNumber}</td>
+                        <td>{$adventure->adventureName}</td>
+                        <td>{$adventure->providerName}</td>
+                        <td>{$adventure->coordinatorName}</td>
+                        <td>{$adventure->participantsCount}</td>
+                        <td>{$adventure->estimatedCost}</td>
+                        <td>
+                            {if isset($adventure->budget)}
+                                {sprintf(
+                                '%d - Semester %d, Part %d',
+                                $adventure->budget->year,
+                                $adventure->budget->semester,
+                                $adventure->budget->part
+                                )}
+                            {else}
+                                No budget assigned
+                            {/if}
+                        </td>
+                        <td>
+                            <p>Disapproved ❌</p>
+                        </td>
+                        <td>
+                            <a n:href="Adventure:edit $adventure->adventureId">Upravit akci</a>
+                        </td>
+                    </tr>
+                {/foreach}
+        </tbody>
+    </table>
+{/block}

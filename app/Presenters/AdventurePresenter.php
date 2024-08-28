@@ -33,17 +33,37 @@ class AdventurePresenter extends Presenter
 
     }
 
-    public function actionUpdateApproval(string $adventureId, int $approvalStatus): void
+    public function actionUpdateActualCost(string $adventureId, int $actualCost): void
     {
         $adventure = $this->adventureRepository->find($adventureId);
 
-        if ($adventure === null) {
+        if (!$adventure instanceof Adventure) {
             $this->sendJson(['success' => false, 'message' => 'Adventure not found.']);
             return;
         }
 
+        $adventure->actualCost = $actualCost;
+        $adventure->budget->actualCost += $actualCost;
+
+        $this->adventureRepository->update($adventure);
+
+        $this->sendJson(['success' => true]);
+    }
+
+    public function actionUpdateApproval(string $adventureId, int $approvalStatus): void
+    {
+        $adventure = $this->adventureRepository->find($adventureId);
+
+        if (!$adventure instanceof Adventure) {
+            $this->sendJson(['success' => false, 'message' => 'Adventure not found.']);
+            return;
+        }
         $adventure->approved = $approvalStatus === 1;
-        $adventure->budget->estimatedCost = $adventure->budget->estimatedCost + $adventure->estimatedCost;
+
+        if ($adventure->approved) {
+            $adventure->budget->estimatedCost += $adventure->estimatedCost;
+        }
+
         $this->adventureRepository->update($adventure);
 
         $this->sendJson(['success' => true]);
@@ -55,6 +75,11 @@ class AdventurePresenter extends Presenter
        $this->adventures = $this->adventureRepository->getAll();
        $this->template->adventures = $this->adventures;
 
+    }
+
+    public function renderDisapprovedAdventures() {
+        $disapprovedAdventures = $this->adventureRepository->getDisapprovedAdventures();
+        $this->template->disapprovedAdventures = $disapprovedAdventures;
 
     }
 
