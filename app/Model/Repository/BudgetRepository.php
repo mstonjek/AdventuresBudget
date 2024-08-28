@@ -12,4 +12,12 @@ class BudgetRepository extends BaseRepository
         parent::__construct($entityManager, Budget::class);
     }
 
+    public function getYearBudgets(): array {
+        $currentYear = (int)date('Y');
+
+        return [
+          "currentYear" => $currentYear,
+          "yearBudgets" => $this->getRepository()->findBy(["year" => $currentYear]),
+        ];
+    }
 }

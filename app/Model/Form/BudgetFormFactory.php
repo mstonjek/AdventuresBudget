@@ -49,32 +49,20 @@ class BudgetFormFactory
             ->setType('number')
             ->setNullable();
 
-        $form->addText('estimatedCost', 'Estimated Cost:')
-            ->setType('number')
-            ->setRequired(self::REQUIRED_MESSAGE);
-
-        $form->addText('actualCost', 'Actual Cost:')
-            ->setType('number')
-            ->setRequired(self::REQUIRED_MESSAGE);
-
-        $form->addText('finalBalance', 'Final Balance:')
-            ->setType('number')
-            ->setRequired(self::REQUIRED_MESSAGE);
-
         $form->addSubmit('submit', 'Save');
 
         $form->onSuccess[] = function (Form $form, \stdClass $values) use ($onSuccess, $budget): void {
             if ($budget === null) {
-                $budget = new Buget();
+                $budget = new Budget();
             }
 
             $budget->year = (int) $values->year;
             $budget->semester = (int) $values->semester;
             $budget->part = (int) $values->part;
-            $budget->startingCapital = $values->startingCapital !== null ? (int) $values->startingCapital : null;
-            $budget->estimatedCost = (int) $values->estimatedCost;
-            $budget->actualCost = (int) $values->actualCost;
-            $budget->finalBalance = (int) $values->finalBalance;
+            $budget->startingCapital = $values->startingCapital !== null ? (int) $values->startingCapital : 0;
+            $budget->estimatedCost = 0;
+            $budget->actualCost = 0;
+            $budget->finalBalance = 0;
 
             $this->budgetRepository->update($budget);
 

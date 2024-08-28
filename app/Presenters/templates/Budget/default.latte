@@ -1,0 +1,44 @@
+{block content}
+
+    <a n:href="Budget:add">Add budgets</a>
+
+    <table>
+        <caption>{$currentYear} - Budgets</caption>
+        <thead>
+        <tr>
+            <th>Year</th>
+            <th>Semester</th>
+            <th>Part</th>
+            <th>Starting Capital</th>
+            <th>Estimated Cost</th>
+            <th>Actual Cost</th>
+            <th>Final Balance</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {foreach $yearBudgets as $budget}
+            <tr>
+                <td>{$budget->year}</td>
+                <td>{$budget->semester}</td>
+                <td>{$budget->part}</td>
+                <td>{$budget->startingCapital}</td>
+                <td>{$budget->estimatedCost}</td>
+                <td>{$budget->actualCost}</td>
+                <td>{$budget->finalBalance}</td>
+                <td>
+                    {* <a n:href="Budget:edit $budget->budgetId" >Edit</a>
+                    <a n:href="Budget:delete $budget->budgetId"  onclick="return confirm('Are you sure you want to delete this budget?');">Delete</a> *}
+                    <a href="#">edit</a>
+                </td>
+            </tr>
+        {else}
+            <tr>
+                <td colspan="8" class="text-center">No budgets available for {$currentYear}</td>
+            </tr>
+        {/foreach}
+        </tbody>
+    </table>
+
+
+{/block}
