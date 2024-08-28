@@ -50,8 +50,8 @@ class Adventure
     #[ORM\Column(name: 'actual_cost', type: 'float', nullable: true)]
     public ?float $actualCost;
 
-    #[ORM\Column(name: 'approved', type: 'boolean')]
-    public bool $approved = false;
+    #[ORM\Column(name: 'approved', type: 'boolean', nullable: true)]
+    public ?bool $approved = null;
 
 
 

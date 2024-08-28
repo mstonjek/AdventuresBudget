@@ -7,6 +7,7 @@ namespace App\Forms;
 use App\Model\Entity\Adventure;
 use App\Repository\AdventureRepository;
 use App\Model\Entity\DepartmentEnum;
+use App\Repository\BudgetRepository;
 use Nette\Application\UI\Form;
 use Nette;
 
@@ -19,6 +20,7 @@ final class AdventureFormFactory
     public function __construct(
         private readonly FormFactory $factory,
         private readonly AdventureRepository $adventureRepository,
+        private readonly BudgetRepository $budgetRepository,
     ){
 
     }
@@ -26,6 +28,22 @@ final class AdventureFormFactory
     public function create(callable $onSuccess, ?Adventure $adventure = null): Form
     {
         $form = $this->factory->create();
+
+        $currentBudgets = $this->budgetRepository->getYearBudgets();
+        $items = [];
+        foreach ($currentBudgets["yearBudgets"] as $budget) {
+            $items[$budget->budgetId] = sprintf(
+                '%d - Semester %d, Part %d',
+                $budget->year,
+                $budget->semester,
+                $budget->part
+            );
+        }
+
+        $form->addSelect('budget')
+            ->setItems($items)
+            ->setDefaultValue($adventure->budget->budgetId ?? null)
+            ->setRequired(self::REQUIRED_MESSAGE);
 
         $form->addText('orderNumber')
             ->setDefaultValue($adventure->orderNumber ?? null)
@@ -70,12 +88,14 @@ final class AdventureFormFactory
 
         $form->onSuccess[] = function (Form $form, \stdClass $values) use ($onSuccess, $adventure): void {
             $adventureCount = $this->adventureRepository->getCount();
+            $budget = $this->budgetRepository->find($values->budget);
 
             if ($adventure === null) {
                 $adventure = new Adventure();
                 $adventure->serialNumber = $adventureCount + 1;
             }
 
+            $adventure->budget = $budget;
             $adventure->orderNumber = $values->orderNumber;
             $adventure->adventureName = $values->adventureName;
             $adventure->providerName = $values->providerName;
