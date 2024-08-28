@@ -37,20 +37,14 @@
                         No budget assigned
                     {/if}
                 </td>
+
                 <td>
-                    {if $adventure->approved === true}
-                        Approved ✔️
-                    {elseif $adventure->approved === false}
-                        Disapproved ❌
-                    {elseif !isset($adventure->approved)}
-                        <div>
-                            <form name="approvalForm">
-                                <button type="submit" name="approve" value="1" class="btn btn-sm btn-success">Approve</button>
-                                <button type="submit" name="disapprove" value="0" class="btn btn-sm btn-danger">Disapprove</button>
-                            </form>
-                        </div>
-                    {/if}
+                    <form>
+                        <button type="button" class="approval-button" data-adventure-id="{$adventure->adventureId}" data-approval-status="1">Approve</button>
+                        <button type="button" class="approval-button" data-adventure-id="{$adventure->adventureId}" data-approval-status="0">Disapprove</button>
+                    </form>
                 </td>
+
                 <td>
                     <a n:href="Adventure:edit $adventure->adventureId">Upravit akci</a>
                 </td>
@@ -65,5 +59,62 @@
     <div>
         <a n:href="Adventure:addExcel">Přidat akci (excel)</a>
     </div>
+
+{/block}
+
+
+{block script}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.approval-button').forEach(function (button) {
+                button.addEventListener('click', function () {
+                    // Get adventureId and approvalStatus from data attributes
+                    let adventureId = this.getAttribute('data-adventure-id');
+                    let approvalStatus = this.getAttribute('data-approval-status');
+
+                    // Create new XMLHttpRequest
+                    const xhttp = new XMLHttpRequest();
+
+                    // Prepare the URL with parameters
+                    const url = {$basePath} + `/adventure/update-approval?adventureId=${ adventureId}&approvalStatus=${ approvalStatus}`;
+
+                    // Configure request
+                    xhttp.open("POST", url, true);
+                    xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                    xhttp.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+
+                    // Define the callback function
+                    xhttp.onload = function () {
+                        if (xhttp.status >= 200 && xhttp.status < 300) {
+                            let response = JSON.parse(xhttp.responseText);
+                            if (response.success) {
+                                console.log('Approval status updated.');
+                                // Optionally, you can update the UI based on the response
+                            } else {
+                                console.error('Failed to update approval status.');
+                            }
+                        } else {
+                            console.error('Request failed with status:', xhttp.status);
+                        }
+                    };
+
+                    // Handle network errors
+                    xhttp.onerror = function () {
+                        console.error('Request failed.');
+                    };
+
+                    // Send the request
+                    xhttp.send();
+                });
+            });
+        });
+    </script>
+
+
+
+
+
+
 
 {/block}

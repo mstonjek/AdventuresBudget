@@ -33,6 +33,23 @@ class AdventurePresenter extends Presenter
 
     }
 
+    public function actionUpdateApproval(string $adventureId, int $approvalStatus): void
+    {
+        $adventure = $this->adventureRepository->find($adventureId);
+
+        if ($adventure === null) {
+            $this->sendJson(['success' => false, 'message' => 'Adventure not found.']);
+            return;
+        }
+
+        $adventure->approved = $approvalStatus === 1;
+        $adventure->budget->estimatedCost = $adventure->budget->estimatedCost + $adventure->estimatedCost;
+        $this->adventureRepository->update($adventure);
+
+        $this->sendJson(['success' => true]);
+    }
+
+
     public function renderDefault()
     {
        $this->adventures = $this->adventureRepository->getAll();
