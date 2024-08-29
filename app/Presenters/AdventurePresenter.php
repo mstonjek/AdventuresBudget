@@ -33,7 +33,7 @@ class AdventurePresenter extends Presenter
 
     }
 
-    public function actionUpdateActualCost(string $adventureId, int $actualCost): void
+    public function actionUpdateActualCost(string $adventureId, float $actualCost): void
     {
         $adventure = $this->adventureRepository->find($adventureId);
 
@@ -50,7 +50,7 @@ class AdventurePresenter extends Presenter
         $this->sendJson(['success' => true]);
     }
 
-    public function actionUpdateApproval(string $adventureId, int $approvalStatus): void
+    public function actionUpdateApproval(string $adventureId, float $approvalStatus): void
     {
         $adventure = $this->adventureRepository->find($adventureId);
 
@@ -62,6 +62,9 @@ class AdventurePresenter extends Presenter
 
         if ($adventure->approved) {
             $adventure->budget->estimatedCost += $adventure->estimatedCost;
+            if (isset($adventure->budget->actualCost)) {
+                $adventure->budget->actualCost += $adventure->budget->actualCost;
+            }
         }
 
         $this->adventureRepository->update($adventure);

@@ -10,6 +10,7 @@
             <th>Coordinator Name</th>
             <th>Participants Count</th>
             <th>Estimated Cost</th>
+            <th>Actual cost</th>
             <th>Budget</th>
             <th>Approved</th>
             <th>Actions</th>
@@ -21,24 +22,21 @@
             {skipIf $adventure->approved === false}
 
             <tr>
-                <td>{$adventure->serialNumber}</td>
+                <td>{$iterator->counter}</td>
                 <td>{$adventure->orderNumber}</td>
                 <td>{$adventure->adventureName}</td>
                 <td>{$adventure->providerName}</td>
                 <td>{$adventure->coordinatorName}</td>
                 <td>{$adventure->participantsCount}</td>
                 <td>{$adventure->estimatedCost}</td>
+                <td>
                     {if $adventure->actualCost}
-                        <td>{$adventure->actualCost}</td>
+                        <p>{$adventure->actualCost}</p>
                     {else}
-                        <td>
-                            <form method="post" action="{link Adventure:updateActualCost}">
-                                <input type="hidden" name="adventureId" value="{$adventure->adventureId}">
-                                <input type="number" name="actualCost" placeholder="Enter cost" required>
-                                <button type="submit" class="btn btn-primary">Save</button>
-                            </form>
-                        </td>
+                        <input type="number" id="actual-cost-{$adventure->adventureId}" placeholder="Enter cost">
+                        <button type="button" id="actual-cost-button-{$adventure->adventureId}" onclick="updateActualCost({$adventure->adventureId})">Save</button>
                     {/if}
+                </td>
                 <td>
                     {if isset($adventure->budget)}
                         {sprintf(
@@ -82,10 +80,57 @@
 {block script}
 
     <script>
+
+        function updateActualCost(adventureId) {
+            const inputElement = document.getElementById('actual-cost-' + adventureId);
+            const buttonElement = document.getElementById('actual-cost-button-' + adventureId);
+            const actualCost = inputElement.value;
+
+            if (!actualCost || isNaN(actualCost)) {
+                alert('Please enter a valid number.');
+                return;
+            }
+
+            const xhttp = new XMLHttpRequest();
+            xhttp.open("POST", {$basePath} + "/adventure/update-actual-cost?", true);
+            xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhttp.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+
+            xhttp.onload = function () {
+                if (xhttp.status >= 200 && xhttp.status < 300) {
+                    const response = JSON.parse(xhttp.responseText);
+                    if (response.success) {
+                        inputElement.outerHTML = '<p>' + actualCost + '</p>';
+
+                        if (buttonElement && buttonElement.parentNode) {
+                            buttonElement.parentNode.removeChild(buttonElement);
+                        }
+
+                        const nextElement = inputElement.nextElementSibling;
+                        if (nextElement) {
+                            nextElement.remove();
+                        }
+
+                        console.log('Actual cost updated successfully.');
+                    } else {
+                        console.error('Failed to update actual cost.');
+                    }
+                } else {
+                    console.error('Request failed with status:', xhttp.status);
+                }
+            };
+
+            xhttp.onerror = function () {
+                console.error('Request failed.');
+            };
+            xhttp.send('adventureId=' + encodeURIComponent(adventureId) + '&actualCost=' + encodeURIComponent(actualCost));
+        }
+
+
         document.addEventListener('DOMContentLoaded', function () {
             document.querySelectorAll('.approval-button').forEach(function (button) {
                 button.addEventListener('click', function () {
-                    let adventureId = this.getAttribute('data-adventure-id');
+                    let adventureId = this.getAttribute('data-adventure-id'); /* This JS part was made by chatGPT I forgot to link, I changed inputs and I need fast js request  */
                     let approvalStatus = this.getAttribute('data-approval-status');
 
                     const xhttp = new XMLHttpRequest();

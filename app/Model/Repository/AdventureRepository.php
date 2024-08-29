@@ -13,7 +13,7 @@ class AdventureRepository extends BaseRepository
 
     public function getAll(): array
     {
-        return $this->getRepository()->findAll();
+        return $this->getRepository()->findBy([], ["serialNumber" => "ASC"]);
     }
 
     public function getCount(): int
