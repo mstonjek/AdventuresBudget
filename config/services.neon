@@ -1,6 +1,7 @@
 services:
     - App\Router\RouterFactory::createRouter
     - App\Service\ExcelService
+    - App\Service\BudgetCalculation
     - CacheWorker
 search:
     manager:

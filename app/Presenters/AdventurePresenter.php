@@ -5,6 +5,7 @@ namespace App\Presenters;
 use App\Forms\AdventureExcelFormFactory;
 use App\Forms\AdventureFormFactory;
 use App\Model\Entity\Adventure;
+use App\Service\BudgetCalculation;
 use Nette\Application\UI\Presenter;
 use App\Repository\AdventureRepository;
 use Nette\Forms\Form;
@@ -18,6 +19,7 @@ class AdventurePresenter extends Presenter
         private readonly AdventureRepository $adventureRepository,
         private readonly AdventureFormFactory $adventureFormFactory,
         private readonly AdventureExcelFormFactory $adventureExcelFormFactory,
+        private readonly BudgetCalculation $budgetCalculation,
     ){
     }
 
@@ -38,7 +40,12 @@ class AdventurePresenter extends Presenter
         $adventure = $this->adventureRepository->find($adventureId);
 
         if (!$adventure instanceof Adventure) {
-            $this->sendJson(['success' => false, 'message' => 'Adventure not found.']);
+            $this->sendJson(['success' => false, 'message' => 'Adventure not found!']);
+            return;
+        }
+
+        if ($adventure->approved !== true) {
+            $this->sendJson(['success' => false, 'message' => 'You can\'t set a actual cost, when adventure not approved!']);
             return;
         }
 
@@ -50,7 +57,7 @@ class AdventurePresenter extends Presenter
         $this->sendJson(['success' => true]);
     }
 
-    public function actionUpdateApproval(string $adventureId, float $approvalStatus): void
+    public function actionUpdateApproval(string $adventureId, int $approvalStatus): void
     {
         $adventure = $this->adventureRepository->find($adventureId);
 
@@ -77,6 +84,7 @@ class AdventurePresenter extends Presenter
     {
        $this->adventures = $this->adventureRepository->getAll();
        $this->template->adventures = $this->adventures;
+       $this->template->budgetCalculation = $this->budgetCalculation->calculateBudget();
 
     }
 

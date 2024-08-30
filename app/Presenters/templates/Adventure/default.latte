@@ -67,11 +67,42 @@
         </tbody>
     </table>
 
+    <br>
+
+    <hr>
+
+    <br>
+
     <div>
         <a n:href="Adventure:add">Přidat akci</a>
     </div>
     <div>
         <a n:href="Adventure:addExcel">Přidat akci (excel)</a>
+    </div>
+
+    <br>
+
+    <hr>
+
+    <br>
+
+    <div>
+
+        <table>
+            <thead>
+            <tr>
+                <th>Year part</th>
+                <th>Value</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr n:foreach="$budgetCalculation as $item => $key">
+                <td>{$item}</td>
+                <td>{$key}</td>
+            </tr>
+            </tbody>
+        </table>
+
     </div>
 
 {/block}
@@ -113,6 +144,7 @@
 
                         console.log('Actual cost updated successfully.');
                     } else {
+                        alert(response.message);
                         console.error('Failed to update actual cost.');
                     }
                 } else {
