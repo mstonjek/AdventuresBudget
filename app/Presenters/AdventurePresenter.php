@@ -12,7 +12,7 @@ use Nette\Forms\Form;
 
 class AdventurePresenter extends Presenter
 {
-    private array $adventures = [];
+    private array $adventures;
     private Adventure $adventure;
 
     public function __construct(

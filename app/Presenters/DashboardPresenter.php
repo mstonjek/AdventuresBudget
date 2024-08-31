@@ -22,7 +22,7 @@ class DashboardPresenter extends Presenter
         $this->currentYear = $budgetInfo["currentYear"];
 
         $this->template->currentYear = $this->currentYear;
-        $this->template->yearBudgets = $budgetInfo["yearBudgets"];
+        $this->template->yearBudgets = $this->yearBudgets;
 
     }
 
