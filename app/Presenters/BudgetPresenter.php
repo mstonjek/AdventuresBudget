@@ -24,7 +24,7 @@ class BudgetPresenter extends Presenter
     public function actionEdit(string $budgetId): void
     {
         $budget = $this->budgetRepository->find($budgetId);
-        if (!$this->budget instanceof Budget) {
+        if (!$budget instanceof Budget) {
             $this->flashMessage('Tento budget neexistuje!', 'alert-danger');
             $this->redirect('Dashboard:default');
         }
