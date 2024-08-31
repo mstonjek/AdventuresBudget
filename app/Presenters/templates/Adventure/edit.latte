@@ -1,85 +1,71 @@
-{block title}
-    Adventure - Edit/Create
-{/block}
-
 {block content}
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="mb-3">
-                    <a href="#" class="btn btn-sm btn-primary">Adventure Details</a>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="mb-2 d-flex justify-content-between align-items-center">
+                    <div>
+                        <h1 class="page-title mb-0">Edit Adventure</h1>
+                    </div>
+                    <div>
+                        <a n:href="adventure:default" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left"></i> Back
+                        </a>
+                    </div>
                 </div>
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Adventure Information</h3>
+                <div class="card shadow-sm">
+                    <div class="card-header text-center">
+                        <h3 class="card-title mb-0">Adventure Information</h3>
                     </div>
                     <form n:name="adventureEditForm">
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-md-4">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <label for="frm-adventureEditForm-orderNumber">Order Number*</label>
-                                            <input n:name="orderNumber" class="form-control" placeholder="Order Number">
-                                        </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="frm-adventureAddForm-orderNumber" class="form-label">Order Number*</label>
+                                        <input n:name="orderNumber" type="text" class="form-control" placeholder="Order Number" required>
                                     </div>
-                                    <div class="row mt-2">
-                                        <div class="col-md-12">
-                                            <label for="frm-adventureEditForm-adventureName">Adventure Name*</label>
-                                            <input n:name="adventureName" class="form-control" placeholder="Adventure Name">
-                                        </div>
+                                    <div class="mb-3">
+                                        <label for="frm-adventureAddForm-adventureName" class="form-label">Adventure Name*</label>
+                                        <input n:name="adventureName" type="text" class="form-control" placeholder="Adventure Name" required>
                                     </div>
-                                    <div class="row mt-2">
-                                        <div class="col-md-12">
-                                            <label for="frm-adventureEditForm-date">Participants*</label>
-                                            <input n:name="participantsCount" class="form-control">
-                                        </div>
+                                    <div class="mb-3">
+                                        <label for="frm-adventureAddForm-participantsCount" class="form-label">Participants Count*</label>
+                                        <input n:name="participantsCount" type="number" class="form-control" placeholder="Participants Count" required>
                                     </div>
-                                    <div class="row mt-2">
-                                        <div class="col-md-12">
-                                            <label for="frm-adventureEditForm-department">Department*</label>
-                                            <select n:name="department" class="form-control"></select>
-                                        </div>
+                                    <div class="mb-3">
+                                        <label for="frm-adventureAddForm-department" class="form-label">Department*</label>
+                                        <select n:name="department" class="form-select" required>
+                                            <option value="" disabled selected>Select Department</option>
+                                        </select>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
-                                    <div class="row mt-2">
-                                        <div class="col-md-12">
-                                            <label for="frm-adventureEditForm-providerName">Provider Name*</label>
-                                            <input n:name="providerName" class="form-control" placeholder="Provider Name">
-                                        </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="frm-adventureAddForm-providerName" class="form-label">Provider Name*</label>
+                                        <input n:name="providerName" type="text" class="form-control" placeholder="Provider Name" required>
                                     </div>
-                                    <div class="row mt-2">
-                                        <div class="col-md-12">
-                                            <label for="frm-adventureEditForm-coordinatorName">Coordinator Name*</label>
-                                            <input n:name="coordinatorName" class="form-control" placeholder="Coordinator Name">
-                                        </div>
+                                    <div class="mb-3">
+                                        <label for="frm-adventureAddForm-coordinatorName" class="form-label">Coordinator Name*</label>
+                                        <input n:name="coordinatorName" type="text" class="form-control" placeholder="Coordinator Name" required>
                                     </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="row mt-2">
-                                        <div class="col-md-12">
-                                            <label for="frm-adventureEditForm-estimatedCost">Estimated Cost*</label>
-                                            <input n:name="estimatedCost" class="form-control" type="number" placeholder="Estimated Cost">
-                                        </div>
+                                    <div class="mb-3">
+                                        <label for="frm-adventureAddForm-estimatedCost" class="form-label">Estimated Cost*</label>
+                                        <input n:name="estimatedCost" type="number" class="form-control" placeholder="Estimated Cost" required>
                                     </div>
-                                    <div class="row mt-2">
-                                        <div class="col-md-12">
-                                            <label for="frm-adventureEditForm-actualCost">Actual Cost</label>
-                                            <input n:name="actualCost" class="form-control" type="number" placeholder="Actual Cost">
-                                        </div>
+                                    <div class="mb-3">
+                                        <label for="frm-adventureAddForm-actualCost" class="form-label">Actual Cost</label>
+                                        <input n:name="actualCost" type="number" class="form-control" placeholder="Actual Cost">
                                     </div>
-                                </div>
-                                <div class="row mt-2">
-                                    <div class="col-md-12">
-                                        <label for="frm-adventureAddForm-budget">Budget*</label>
-                                        <select n:name="budget" class="form-control">
+                                    <div class="mb-3">
+                                        <label for="frm-adventureAddForm-budget" class="form-label">Budget*</label>
+                                        <select n:name="budget" class="form-select" required>
+                                            <option value="" disabled selected>Select Budget</option>
                                         </select>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="card-footer">
+                        <div class="card-footer text-end">
                             <button type="submit" class="btn btn-primary">Save</button>
                         </div>
                     </form>
